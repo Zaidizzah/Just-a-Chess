@@ -40,7 +40,7 @@ function generateBoardTilesCoordinates(baseChessBoardRatio, chessBoardGrid) {
   for (let row = 1; row <= chessBoardGrid; row++) {
     for (let col = 1; col <= chessBoardGrid; col++) {
       coordinates.push({
-        name: `${row}${String.fromCharCode(96 + col)}`, // lower case alphabet from UTF-8 unit code sequence
+        name: `${chessBoardGrid + 1 - row}${String.fromCharCode(96 + col)}`, // lower case alphabet from UTF-8 unit code sequence
         top: tileRatio * row - tileRatio,
         left: tileRatio * col - tileRatio,
       });
@@ -92,57 +92,36 @@ function generateStartPositionForPieces(coordinates) {
   });
 }
 
-function generateTileCoordinateNames(baseChessBoardRatio, chessBoardGrid) {
-  const rectangleSide = 4,
-    tileNamesTotal = rectangleSide * chessBoardGrid,
-    tileNamePosition = {
-      x: [1, 3],
-      y: [2, 4],
-    },
-    widthGameContainerPosProperty = gameContainer.getBoundingClientRect(),
-    tileNameSPANElement = (tileName, position, topPos, leftPos) =>
-      `<span class="tile-name ${position}" style="font-size: 24px; top: ${topPos}px; left: ${leftPos}px">${tileName}</span>`;
+function generateExternalTileLabels(baseChessBoardRatio, chessBoardGrid) {
+  const tileNameSPANElement = (tileName) =>
+      `<span class="tile-name">${tileName}</span>`,
+    xAxis = document.querySelector(".axis-x"),
+    yAxis = document.querySelector(".axis-y");
 
-  console.log(widthGameContainerPosProperty);
+  xAxis.style.width = baseChessBoardRatio + "px";
+  yAxis.style.height = baseChessBoardRatio + "px";
 
-  for (let sideI = 1; sideI <= rectangleSide; sideI++) {
-    for (let tileCount = 1; tileCount <= chessBoardGrid; tileCount++) {
-      container.insertAdjacentHTML(
-        "beforeend",
-        tileNameSPANElement(
-          tileNamePosition.x.includes(sideI)
-            ? String.fromCharCode(96 + tileCount)
-            : tileCount,
-          tileNamePosition.x.includes(sideI) ? "x" : "y",
-          Math.ceil(widthGameContainerPosProperty.top) - TILE_RATIO,
-          Math.ceil(widthGameContainerPosProperty.left),
-        ),
-      );
-    }
+  for (let i = 0; i < chessBoardGrid; i++) {
+    xAxis.insertAdjacentHTML(
+      "beforeend",
+      tileNameSPANElement(String.fromCharCode(97 + i)),
+    );
+    yAxis.insertAdjacentHTML(
+      "beforeend",
+      tileNameSPANElement(chessBoardGrid - i),
+    );
   }
 }
-
-generateTileCoordinateNames(BASE_CHESS_BOARD_RATIO, CHESS_BOARD_GRID);
 
 // Getting every coordinates of tile
 BOARD_TILES = generateBoardTilesCoordinates(
   BASE_CHESS_BOARD_RATIO,
   CHESS_BOARD_GRID,
 );
-
-// generateBoardTilesCoordinates(BASE_CHESS_BOARD_RATIO, CHESS_BOARD_GRID).every(
-//   (item, index) =>
-//     gameContainer.appendChild(
-//       generatePieceElement(
-//         "white",
-//         item,
-//         PIECE_NAMES[randomIntFromInterval(0, 5)],
-//       ),
-//     ),
-// );
-
+generateExternalTileLabels(BASE_CHESS_BOARD_RATIO, CHESS_BOARD_GRID);
 generateStartPositionForPieces(BOARD_TILES);
-generateTileCoordinateNames();
+
+console.log(BOARD_TILES);
 
 // Exporting the chess constanta
 export {
