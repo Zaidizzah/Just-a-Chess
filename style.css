@@ -1,0 +1,35 @@
+body {
+  font-family: arial, "poppins";
+}
+
+.container {
+  position: relative;
+  width: 100wh;
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container .tile-name {
+  position: absolute;
+}
+
+.container .game.board {
+  position: relative;
+  max-width: 784px;
+  max-height: 784px;
+  height: max-content;
+  width: max-content;
+  border-radius: 10px;
+}
+
+.container .game.board img[alt="Chess Board"] {
+  width: calc(784px / 2);
+  height: calc(784px / 2);
+}
+
+.container .game.board img.piece {
+  position: absolute;
+}
